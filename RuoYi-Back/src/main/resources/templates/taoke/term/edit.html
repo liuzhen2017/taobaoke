@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改时限管理')" />
+    <th:block th:include="include :: datetimepicker-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-term-edit" th:object="${term}">
+            <input name="uId" th:field="*{uId}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">可用时间(单位：毫秒)：</label>
+                <div class="col-sm-8">
+                    <input name="availableTime" id="availableTime" th:field="*{availableTime}" class="form-control" type="number">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">增加时限：</label>
+                <div class="col-sm-8">
+					<p>
+						<button type="button" id="t1" class="btn btn-outline btn-default">还原</button>
+						<button type="button" id="t2" class="btn btn-outline btn-primary">+ 7天</button>
+						<button type="button" id="t3" class="btn btn-outline btn-success">+ 30天</button>
+						<button type="button" id="t4" class="btn btn-outline btn-warning">+ 180天</button>
+						<button type="button" id="t5" class="btn btn-outline btn-danger">+ 360天</button>
+					</p>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: datetimepicker-js" />
+    <script type="text/javascript">
+        var prefix = ctx + "taoke/term";
+        $("#form-term-edit").validate({
+            focusCleanup: true
+        });
+
+        let time = $("#availableTime").val();
+        //==还原点击事件
+        $("#t1").click(()=>{
+            $("#availableTime").val(time);
+		});
+        //==7天点击事件
+        $("#t2").click(()=>{
+            $("#availableTime").val(parseInt($("#availableTime").val())+604800000);
+		});
+        //==30天点击事件
+        $("#t3").click(()=>{
+            $("#availableTime").val(parseInt($("#availableTime").val())+2592000000);
+		});
+        //==180天点击事件
+        $("#t4").click(()=>{
+            $("#availableTime").val(parseInt($("#availableTime").val())+15552000000);
+		});
+        //==360天点击事件
+        $("#t5").click(()=>{
+            $("#availableTime").val(parseInt($("#availableTime").val())+31104000000);
+		});
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-term-edit').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.taoke.poster.mapper.PosterMapper">
+
+    <resultMap type="com.ruoyi.taoke.poster.domain.Poster" id="PosterResult">
+        <result property="id"    column="id"    />
+        <result property="uId"    column="u_id"    />
+        <result property="title"    column="title"    />
+        <result property="imgUrl"    column="img_url"    />
+        <result property="type"    column="type"    />
+        <result property="createdDate"    column="created_date"    />
+        <result property="updatedDate"    column="updated_date"    />
+    </resultMap>
+
+    <sql id="selectPosterVo">
+        select id, u_id, title, img_url, type, created_date, updated_date from poster
+    </sql>
+
+    <select id="selectPosterList" parameterType="com.ruoyi.taoke.poster.domain.Poster" resultMap="PosterResult">
+        <include refid="selectPosterVo"/>
+        <where>
+            <if test="uId != null and uId != '' "> and u_id = #{uId}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="imgUrl != null  and imgUrl != ''"> and img_url = #{imgUrl}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="createdDate != null "> and created_date = #{createdDate}</if>
+            <if test="updatedDate != null "> and updated_date = #{updatedDate}</if>
+        </where>
+    </select>
+
+    <select id="selectPosterById" parameterType="Long" resultMap="PosterResult">
+        <include refid="selectPosterVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPoster" parameterType="com.ruoyi.taoke.poster.domain.Poster" useGeneratedKeys="true" keyProperty="id">
+        insert into poster
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uId != null ">u_id,</if>
+            <if test="title != null  and title != ''">title,</if>
+            <if test="imgUrl != null  and imgUrl != ''">img_url,</if>
+            <if test="type != null ">type,</if>
+            <if test="createdDate != null ">created_date,</if>
+            <if test="updatedDate != null ">updated_date,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uId != null ">#{uId},</if>
+            <if test="title != null  and title != ''">#{title},</if>
+            <if test="imgUrl != null  and imgUrl != ''">#{imgUrl},</if>
+            <if test="type != null ">#{type},</if>
+            <if test="createdDate != null ">#{createdDate},</if>
+            <if test="updatedDate != null ">#{updatedDate},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePoster" parameterType="com.ruoyi.taoke.poster.domain.Poster">
+        update poster
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="uId != null ">u_id = #{uId},</if>
+            <if test="title != null  and title != ''">title = #{title},</if>
+            <if test="imgUrl != null  and imgUrl != ''">img_url = #{imgUrl},</if>
+            <if test="type != null ">type = #{type},</if>
+            <if test="createdDate != null ">created_date = #{createdDate},</if>
+            <if test="updatedDate != null ">updated_date = #{updatedDate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePosterById" parameterType="Long">
+        delete from poster where id = #{id}
+    </delete>
+
+    <delete id="deletePosterByIds" parameterType="String">
+        delete from poster where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
+

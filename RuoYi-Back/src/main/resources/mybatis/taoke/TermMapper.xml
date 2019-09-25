@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.taoke.term.mapper.TermMapper">
+    
+    <resultMap type="com.ruoyi.taoke.term.domain.Term" id="TermResult">
+        <result property="uId"    column="u_id"    />
+        <result property="availableTime"    column="available_time"    />
+        <result property="createdDate"    column="created_date"    />
+        <result property="updatedDate"    column="updated_date"    />
+    </resultMap>
+
+    <sql id="selectTermVo">
+        select u_id, available_time, created_date, updated_date from term
+    </sql>
+
+    <select id="selectTermList" parameterType="com.ruoyi.taoke.term.domain.Term" resultMap="TermResult">
+        <include refid="selectTermVo"/>
+        <where>  
+            <if test="uId != null and uId != ''"> and u_id = #{uId}</if>
+            <if test="availableTime != null  and availableTime != ''"> and available_time = #{availableTime}</if>
+            <if test="createdDate != null "> and created_date = #{createdDate}</if>
+            <if test="updatedDate != null "> and updated_date = #{updatedDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectTermById" parameterType="Long" resultMap="TermResult">
+        <include refid="selectTermVo"/>
+        where u_id = #{uId}
+    </select>
+        
+    <insert id="insertTerm" parameterType="com.ruoyi.taoke.term.domain.Term">
+        insert into term
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uId != null ">u_id,</if>
+            <if test="availableTime != null  and availableTime != ''">available_time,</if>
+            <if test="createdDate != null ">created_date,</if>
+            <if test="updatedDate != null ">updated_date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uId != null ">#{uId},</if>
+            <if test="availableTime != null  and availableTime != ''">#{availableTime},</if>
+            <if test="createdDate != null ">#{createdDate},</if>
+            <if test="updatedDate != null ">#{updatedDate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTerm" parameterType="com.ruoyi.taoke.term.domain.Term">
+        update term
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="availableTime != null  and availableTime != ''">available_time = #{availableTime},</if>
+            <if test="createdDate != null ">created_date = #{createdDate},</if>
+            <if test="updatedDate != null ">updated_date = #{updatedDate},</if>
+        </trim>
+        where u_id = #{uId}
+    </update>
+
+    <delete id="deleteTermById" parameterType="Long">
+        delete from term where u_id = #{uId}
+    </delete>
+
+    <delete id="deleteTermByIds" parameterType="String">
+        delete from term where u_id in 
+        <foreach item="uId" collection="array" open="(" separator="," close=")">
+            #{uId}
+        </foreach>
+    </delete>
+    
+</mapper>

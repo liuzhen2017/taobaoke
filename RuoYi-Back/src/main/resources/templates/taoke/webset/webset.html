@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('网页配置列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <p>用户ID：</p>
+                                <input type="text" name="uId"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table" data-mobile-responsive="true"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('taoke:webset:edit')}]];
+        var prefix = ctx + "taoke/webset";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                updateUrl: prefix + "/edit/{id}",
+                modalName: "网页配置",
+                columns: [
+                {
+                    field : 'uid',
+                    title : '用户id'
+                },
+                {
+                    field : 'title', 
+                    title : '网页标题'
+                },
+                {
+                    field : 'videoImg', 
+                    title : '视频封面',formatter: function(value, row, index) {
+                        return `<img onclick="previewImg('`+value+`')" src="`+value+`" height="50" style="cursor: pointer"/>`;
+                    }
+                },
+                {
+                    field : 'videoUrl', 
+                    title : '视频地址'
+                },
+                {
+                    field : 'createdDate', 
+                    title : '创建时间'
+                },
+                {
+                    field : 'updatedDate', 
+                    title : '最后修改时间'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.uid + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+
+
+        /**
+         *  打开图片
+         * @param src img的URL
+         */
+        function previewImg(src) {
+            var img = new Image();
+            img.src = src;
+            var height = img.height + 50; //获取图片高度
+            var width = img.width; 		  //获取图片宽度
+            height = height > 600 ? 600:height; //限制 最高
+            width = width > 850 ? 850:width; //限制 最宽
+            var imgHtml = "<img height='"+(height-50)+"' width='"+width+"' src='" + src+ "' />";
+            //弹出层
+            layer.open({
+                type: 1,
+                shade: 0.8,
+                offset: 'auto',
+                area: [width + 'px',height+'px'],
+                shadeClose:true,//点击外围关闭弹窗
+                scrollbar: false,//不现实滚动条
+                title: "图片预览", //不显示标题
+                content: imgHtml //捕获的元素，注意：最好该指定的元素要存放在body最外层，否则可能被其它的相对元素所影响
+            });
+        }
+    </script>
+</body>
+</html>

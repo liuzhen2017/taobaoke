@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('分类列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <p>分类名字：</p>
+                                <input type="text" name="categoryName"/>
+                            </li>
+                            <li>
+                                <p>用户ID：</p>
+                                <input type="text" name="userId"/>
+                            </li>
+                            <li>
+                                <p>是否启用：</p>
+								<select name="enable" >
+									<option value="">选择状态</option>
+									<option value="1">启用</option>
+									<option value="0">禁用</option>
+								</select>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="taoke:category:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+                <!--<a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="taoke:category:edit">-->
+                    <!--<i class="fa fa-edit"></i> 修改-->
+                <!--</a>-->
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.disableAll()" shiro:hasPermission="taoke:category:remove">
+                    <i class="fa fa-remove"></i> 选择禁用
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table" data-mobile-responsive="true"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('taoke:category:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('taoke:category:remove')}]];
+        var prefix = ctx + "taoke/category";
+
+        /**
+         * 启用
+         * @param id
+         */
+        function enable(id){
+           $.getJSON(prefix+"/enable/"+id,(res)=>{
+               if(res.code == "0"){
+                   $.modal.msgSuccess("启用成功！");
+                   $.table.refresh();
+			   }else{
+                   $.modal.alertError("系统错误，请联系后台开发人员！");
+			   }
+		   })
+        }
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                modalName: "分类",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field : 'id', 
+                    title : '分类ID'
+                },
+				{
+					field : 'userId',
+					title : '用户ID'
+				},
+                {
+                    field : 'categoryName', 
+                    title : '分类名字'
+                },
+				{
+					field : 'enable',
+					title : '是否启用',
+                    formatter: function(value, row, index) {
+					    return ` <button type="button" class="btn btn-`+(value == "1" ? "primary":"default")+` btn-xs">`+(value == "1" ? "启用":"禁用")+`</button>`
+					}
+				},
+                {
+                    field : 'categoryRemarks', 
+                    title : '分类备注'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"> <i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push(' <a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.disable(\'' + row.id + '\')"> <i class="fa fa-remove"></i>禁用</a> ');
+                        actions.push(' <a class="btn btn-primary btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="enable(\'' + row.id + '\')"> <i class="fa fa-crosshairs"></i>启用</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

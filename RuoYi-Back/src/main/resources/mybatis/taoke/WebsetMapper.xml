@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.taoke.webset.mapper.WebsetMapper">
+    
+    <resultMap type="com.ruoyi.taoke.webset.domain.Webset" id="WebsetResult">
+        <result property="uId"    column="u_id"    />
+        <result property="title"    column="title"    />
+        <result property="videoImg"    column="video_img"    />
+        <result property="videoUrl"    column="video_url"    />
+        <result property="createdDate"    column="created_date"    />
+        <result property="updatedDate"    column="updated_date"    />
+    </resultMap>
+
+    <sql id="selectWebsetVo">
+        select u_id, title, video_img, video_url, created_date, updated_date from webset
+    </sql>
+
+    <select id="selectWebsetList" parameterType="com.ruoyi.taoke.webset.domain.Webset" resultMap="WebsetResult">
+        <include refid="selectWebsetVo"/>
+        <where>  
+            <if test="uId != null  and uId != ''"> and u_id = #{uId}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="videoImg != null  and videoImg != ''"> and video_img = #{videoImg}</if>
+            <if test="videoUrl != null  and videoUrl != ''"> and video_url = #{videoUrl}</if>
+            <if test="createdDate != null "> and created_date = #{createdDate}</if>
+            <if test="updatedDate != null "> and updated_date = #{updatedDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectWebsetById" parameterType="Long" resultMap="WebsetResult">
+        <include refid="selectWebsetVo"/>
+        where u_id = #{uId}
+    </select>
+        
+    <insert id="insertWebset" parameterType="com.ruoyi.taoke.webset.domain.Webset">
+        insert into webset
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uId != null ">u_id,</if>
+            <if test="title != null  and title != ''">title,</if>
+            <if test="videoImg != null  and videoImg != ''">video_img,</if>
+            <if test="videoUrl != null  and videoUrl != ''">video_url,</if>
+            <if test="createdDate != null ">created_date,</if>
+            <if test="updatedDate != null ">updated_date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uId != null ">#{uId},</if>
+            <if test="title != null  and title != ''">#{title},</if>
+            <if test="videoImg != null  and videoImg != ''">#{videoImg},</if>
+            <if test="videoUrl != null  and videoUrl != ''">#{videoUrl},</if>
+            <if test="createdDate != null ">#{createdDate},</if>
+            <if test="updatedDate != null ">#{updatedDate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWebset" parameterType="com.ruoyi.taoke.webset.domain.Webset">
+        update webset
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null  and title != ''">title = #{title},</if>
+            <if test="videoImg != null  and videoImg != ''">video_img = #{videoImg},</if>
+            <if test="videoUrl != null  and videoUrl != ''">video_url = #{videoUrl},</if>
+            <if test="createdDate != null ">created_date = #{createdDate},</if>
+            <if test="updatedDate != null ">updated_date = #{updatedDate},</if>
+        </trim>
+        where u_id = #{uId}
+    </update>
+
+    <delete id="deleteWebsetById" parameterType="Long">
+        delete from webset where u_id = #{uId}
+    </delete>
+
+    <delete id="deleteWebsetByIds" parameterType="String">
+        delete from webset where u_id in 
+        <foreach item="uId" collection="array" open="(" separator="," close=")">
+            #{uId}
+        </foreach>
+    </delete>
+    
+</mapper>

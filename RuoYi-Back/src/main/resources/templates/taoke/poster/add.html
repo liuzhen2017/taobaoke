@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增海报配置')" />
+    <th:block th:include="include :: datetimepicker-css" />
+	<link rel="stylesheet" href="../../../layui/css/layui.css"  media="all">
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-poster-add">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">海报标题：</label>
+                <div class="col-sm-8">
+                    <input name="title" class="form-control" type="text">
+                </div>
+            </div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">展示图片：</label>
+				<div class="col-sm-8">
+					<input  name="imgUrl" id="imageUrl"  class="form-control" type="hidden" >
+					<div class="layui-upload-drag" id="upImg">
+						<i class="layui-icon"></i>
+						<p>点击上传，或将文件拖拽到此处</p>
+					</div>
+				</div>
+			</div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">海报类型：</label>
+                <div class="col-sm-8">
+                    <select name="type" class="form-control m-b">
+                        <!--<option value="">所有</option>-->
+                        <option value="0">轮播图</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: datetimepicker-js" />
+	<script src="../../../layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript">
+        var prefix = ctx + "taoke/poster"
+        $("#form-poster-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/add", $('#form-poster-add').serialize());
+            }
+        }
+
+        layui.use(['upload'], function(){
+            var $ = layui.jquery,upload = layui.upload;
+
+            //==================上传图片
+            upload.render({
+                elem: '#upImg',
+                url: '/common/uploadNew',
+                done: function(res){
+                    if (res.code == "0") {
+                        console.log();
+                        $("#imageUrl").val(res.url); //赋值
+                        $('#upImg').css({
+                            backgroundImage:"url("+res.url+")",
+                            backgroundSize: "100% 100%"
+                        }).children().css({opacity:'0'});
+                    } else {
+                        $.modal.alertError(result.msg);
+                    }
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>

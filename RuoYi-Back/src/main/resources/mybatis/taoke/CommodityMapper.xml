@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.taoke.commodity.mapper.CommodityMapper">
+    
+    <resultMap type="com.ruoyi.taoke.commodity.domain.Commodity" id="CommodityResult">
+        <result property="id"    column="id"    />
+        <result property="uId"    column="u_id"    />
+        <result property="cId"    column="c_id"    />
+        <result property="createdDate"    column="created_date"    />
+        <result property="updatedDate"    column="updated_date"    />
+        <result property="categoryId"    column="category_id"    />
+        <result property="categoryName"    column="category_name"    />
+        <result property="couponUrl"    column="coupon_url"    />
+        <result property="couponPrice"    column="coupon_price"    />
+        <result property="label"    column="label"    />
+        <result property="comName"    column="com_name"    />
+        <result property="comImg"    column="com_img"    />
+        <result property="comPrice"    column="com_price"    />
+    </resultMap>
+
+    <sql id="selectCommodityVo">
+        select id, u_id, c_id, created_date, updated_date, category_id, category_name, coupon_url, coupon_price, label,com_name,com_img,com_price from commodity
+    </sql>
+
+    <select id="selectCommodityList" parameterType="com.ruoyi.taoke.commodity.domain.Commodity" resultMap="CommodityResult">
+        <include refid="selectCommodityVo"/>
+        <where>  
+            <if test="uId != null  and uId != ''"> and u_id = #{uId}</if>
+            <if test="categoryId != null  and categoryId != ''"> and category_id = #{categoryId}</if>
+            <if test="categoryName != null  and categoryName != ''"> and category_name like concat('%', #{categoryName}, '%')</if>
+            <if test="comName != null  and comName != ''"> and com_name like concat('%', #{comName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectCommodityById" parameterType="String" resultMap="CommodityResult">
+        <include refid="selectCommodityVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCommodity" parameterType="com.ruoyi.taoke.commodity.domain.Commodity" useGeneratedKeys="true" keyProperty="id">
+        insert into commodity
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uId != null  and uId != ''">u_id,</if>
+            <if test="cId != null  and cId != ''">c_id,</if>
+            <if test="createdDate != null  and createdDate != ''">created_date,</if>
+            <if test="updatedDate != null  and updatedDate != ''">updated_date,</if>
+            <if test="categoryId != null  and categoryId != ''">category_id,</if>
+            <if test="categoryName != null  and categoryName != ''">category_name,</if>
+            <if test="couponUrl != null  and couponUrl != ''">coupon_url,</if>
+            <if test="couponPrice != null ">coupon_price,</if>
+            <if test="label != null  and label != ''">label,</if>
+            <if test="comName != null  and comName != ''">com_name,</if>
+            <if test="comImg != null  and comImg != ''">com_img,</if>
+            <if test="comPrice != null  and comPrice != ''">com_price,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uId != null  and uId != ''">#{uId},</if>
+            <if test="cId != null  and cId != ''">#{cId},</if>
+            <if test="createdDate != null  and createdDate != ''">#{createdDate},</if>
+            <if test="updatedDate != null  and updatedDate != ''">#{updatedDate},</if>
+            <if test="categoryId != null  and categoryId != ''">#{categoryId},</if>
+            <if test="categoryName != null  and categoryName != ''">#{categoryName},</if>
+            <if test="couponUrl != null  and couponUrl != ''">#{couponUrl},</if>
+            <if test="couponPrice != null ">#{couponPrice},</if>
+            <if test="label != null  and label != ''">#{label},</if>
+            <if test="comName != null  and comName != ''">#{comName},</if>
+            <if test="comImg != null  and comImg != ''">#{comImg},</if>
+            <if test="comPrice != null  and comPrice != ''">#{comPrice},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCommodity" parameterType="com.ruoyi.taoke.commodity.domain.Commodity">
+        update commodity
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="uId != null  and uId != ''">u_id = #{uId},</if>
+            <if test="cId != null  and cId != ''">c_id = #{cId},</if>
+            <if test="createdDate != null  and createdDate != ''">created_date = #{createdDate},</if>
+            <if test="updatedDate != null  and updatedDate != ''">updated_date = #{updatedDate},</if>
+            <if test="categoryId != null  and categoryId != ''">category_id = #{categoryId},</if>
+            <if test="categoryName != null  and categoryName != ''">category_name = #{categoryName},</if>
+            <if test="couponUrl != null  and couponUrl != ''">coupon_url = #{couponUrl},</if>
+            <if test="couponPrice != null ">coupon_price = #{couponPrice},</if>
+            <if test="label != null  and label != ''">label = #{label},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCommodityById" parameterType="String">
+        delete from commodity where id = #{id}
+    </delete>
+
+    <delete id="deleteCommodityByIds" parameterType="String">
+        delete from commodity where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

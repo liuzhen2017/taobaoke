@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改网页配置')" />
+    <th:block th:include="include :: datetimepicker-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-webset-edit" th:object="${webset}">
+            <input name="uId" th:field="*{uId}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">网页标题：</label>
+                <div class="col-sm-8">
+                    <input name="title" th:field="*{title}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">视频封面：</label>
+                <div class="col-sm-8">
+                    <textarea name="videoImg" class="form-control">[[*{videoImg}]]</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">视频地址：</label>
+                <div class="col-sm-8">
+                    <textarea name="videoUrl" class="form-control">[[*{videoUrl}]]</textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: datetimepicker-js" />
+    <script type="text/javascript">
+        var prefix = ctx + "taoke/webset";
+        $("#form-webset-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-webset-edit').serialize());
+            }
+        }
+
+    </script>
+</body>
+</html>

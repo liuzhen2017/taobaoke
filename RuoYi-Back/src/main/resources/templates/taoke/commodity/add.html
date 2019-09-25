@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增商品信息')" />
+    <th:block th:include="include :: datetimepicker-css" />
+	<th:block th:include="include :: select2-css" />
+	<th:block th:include="include :: bootstrap-select-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-commodity-add">
+
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">商品连接：</label>
+                <div class="col-sm-8">
+					<div class="input-group">
+						<input id="com-url" type="text" class="form-control" required> <span class="input-group-btn">
+						<button type="button" id="getCom" class="btn btn-success">获取商品ID</button> </span>
+					</div>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">商品ID：</label>
+                <div class="col-sm-8">
+                    <input id="cId" name="cId" class="form-control" type="text" required>
+                </div>
+            </div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">请选择所属分类：</label>
+				<div class="col-sm-8">
+					<select class="form-control" name="categoryId" id="category"></select>
+				</div>
+			</div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">优惠券领取URL：</label>
+                <div class="col-sm-8">
+					<input name="couponUrl" class="form-control" type="text" required>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">优惠券价格：</label>
+                <div class="col-sm-8">
+                    <input name="couponPrice" class="form-control" type="number" required>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">标签：</label>
+                <div class="col-sm-8">
+                    <input name="label" class="form-control" type="text">
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: datetimepicker-js" />
+	<th:block th:include="include :: select2-js" />
+	<th:block th:include="include :: bootstrap-select-js" />
+    <script type="text/javascript">
+        var prefix = ctx + "taoke/commodity"
+        $("#form-commodity-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/add", $('#form-commodity-add').serialize());
+            }
+        }
+
+        $("input[name='createdDate']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+
+        //================================ 自定义JS
+
+        $(()=>{
+            // 初始化 加载所有分类
+			$.getJSON(ctx+"taoke/category/getList",(res)=>{
+			    let arr = [];
+			    $.each(res,(index,v)=>{
+			        arr.push(`<option value="`+(v.id+";"+v.categoryName)+`">`+v.categoryName+`</option>`)
+				})
+			    $("#category").append(arr.join());
+			})
+			//获取点击事件
+			$("#getCom").click(()=>{
+			    let comUrl = $("#com-url").val();
+			    debugger
+			    if(!comUrl || ($.trim(comUrl)).length < 1){
+                    $.modal.alertWarning("请输入url");
+			        return;
+				}
+				$("#cId").val(getvar(comUrl,"id")); //设置值
+
+			});
+
+            /**
+			 * 获取指定参数 值
+             * @param url
+             * @param par
+             * @return {*}
+             */
+            function getvar(url,par){
+                var urlsearch = url.split('?');
+                pstr = urlsearch[1].split('&');
+                for (var i = pstr.length - 1; i >= 0; i--) {
+                    var tep = pstr[i].split("=");
+                    if(tep[0] == par){
+                        return tep[1];
+                    }
+                }
+                return(false);
+            }
+
+		});
+
+
+    </script>
+</body>
+</html>

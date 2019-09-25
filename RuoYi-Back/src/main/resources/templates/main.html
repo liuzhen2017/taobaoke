@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--360浏览器优先以webkit内核解析-->
+    <title>关于我们</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link href="../static/css/font-awesome.min.css" th:href="@{/css/font-awesome.min.css}" rel="stylesheet"/>
+    <link href="../static/css/main/animate.min.css" th:href="@{/css/main/animate.min.css}" rel="stylesheet"/>
+    <link href="../static/css/main/style.min862f.css" th:href="@{/css/main/style.min862f.css}" rel="stylesheet"/>
+    <link href="../static/css/video.css" th:href="@{/css/video.css}" rel="stylesheet"/>
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/pingzi_video.js}"></script>
+	<style>
+		#video{
+			width: 100%;
+			height: 50px;
+			/*background-color: #f00;*/
+		}
+	</style>
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-sm-7">
+				<div class="col-sm-12">
+					<div class="jumbotron">
+						<h1>Welcome to TaokeTool !</h1>
+						<p>快捷、方便、效率、安全</p>
+						<p><a href="#" target="_blank" class="btn btn-primary btn-lg" role="button">欢迎使用</a>
+						</p>
+					</div>
+				</div>
+				<div class="col-sm-12">
+					<div class="ibox">
+						<div class="ibox-title">
+							<h5>使用教程</h5>
+						</div>
+						<div class="ibox-content">
+							<h2>使用教程</h2>
+							<p>下面这个示例展示了如何使用TaokeTool</p>
+
+							<div id="video">
+								<dvi class="btn btn-danger btn-outline btn-rounded"><div class="m-video" data-src="https://taoke-tool-plus.oss-cn-shenzhen.aliyuncs.com/example.mp4">观看视频</div></dvi>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-5">
+				<div class="col-sm-12">
+					<div class="ibox float-e-margins">
+						<div class="ibox-title">
+							<h5>更新日志</h5>
+						</div>
+						<div class="ibox-content no-padding">
+							<div class="panel-body">
+								<div class="panel-group" id="version">
+									<div class="panel panel-default">
+										<div class="panel-heading">
+											<h5 class="panel-title">
+												<a data-toggle="collapse" data-parent="#version" href="#v40">v1.0.0</a><code class="pull-right">2019.09.13</code>
+											</h5>
+										</div>
+										<div id="v40" class="panel-collapse collapse in">
+											<div class="panel-body">
+												<ol>
+													<li>淘客工具V1.0.0 正式发版！</li>
+													<li>增加网站管理 > 海报设置功能！</li>
+													<li>增加网站管理 > 首页装修功能！</li>
+													<li>增加商品管理 > 分类管理功能！</li>
+													<li>增加商品管理 > 商品管理功能！</li>
+													<li>增加个人中心 > 系统充值功能！</li>
+												</ol>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-12">
+
+					<div class="ibox float-e-margins">
+						<div class="ibox-title">
+							<h5>联系信息</h5>
+						</div>
+						<div class="ibox-content">
+							<p><i class="fa fa-send-o"></i> 官网：<a href="http://www.mddor.cn" target="_blank">http://www.mddor.cm</a></p>
+							<!--<p><i class="fa fa-qq"></i> QQ群：<s>满XXXXXXXX</s><a href="javascript:;" target="_blank">123456789</a></p>-->
+							<p><i class="fa fa-weixin"></i> 微信：<a href="javascript:;">546562709</a></p>
+							<p><i class="fa fa-envelope"></i> 邮箱：<a href="javascript:;">546562709@qq.com</a></p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script th:src="@{/ajax/libs/layer/layer.min.js}"></script>
+    <script type="text/javascript">
+	    $('#pay-qrcode').click(function(){
+	        var html=$(this).html();
+	        parent.layer.open({
+	            title: false,
+	            type: 1,
+	            closeBtn:false,
+	            shadeClose:true,
+	            area: ['600px', 'auto'],
+	            content: html
+	        });
+	    });
+    </script>
+</body>
+</html>
